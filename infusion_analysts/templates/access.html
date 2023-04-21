@@ -1,4 +1,4 @@
-{% if user_info %}
+{% comment %} {% if user_info %}
     <p>Username: {{ user_info.username }}</p>
     <p>Email: {{ user_info.email }}</p>
     <!-- Add any other user information you retrieved in the access view -->
@@ -6,4 +6,7 @@
     <p>No user information available.</p>
 {% endif %}
 
-{% comment %} <p><a href="{{http://localhost:8000/home}}">Click here to access the resource</a></p> {% endcomment %}
+<p><a href="{{http://localhost:8000/account/login}}">Click here to access the resource</a></p> {% endcomment %}
+<p>Welcome: {{ user_info.username }}!</p>
+<p>Your email address is :{{ user_info.email }}.</p>
+

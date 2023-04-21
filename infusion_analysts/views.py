@@ -209,36 +209,38 @@ class MyTokenView(TokenView):
 class MyUserView(ProtectedResourceView):
     pass
 
+
+import hashlib
+import base64
+import secrets
+
+# Generate a random code verifier
+code_verifier = "OTBGUlpYRkk1MFlZSVc3VEk2TkNBRjE0UFc1Qzg4VVFKQ1RZWFE5QkpDQTNUTU9FNEw1ME5DRFU5M09SNUpaODBFT1hDRFZHUDhW"
+code_verifier = base64.urlsafe_b64encode(code_verifier.encode('utf-8'))
+print(code_verifier, "@@@@@@@@@@@@@@@@@@@@@2")
+
+
+# Calculate the SHA-256 hash of the code verifier
+code_challenge = hashlib.sha256(code_verifier).digest()
+code_challenge = base64.urlsafe_b64encode(code_challenge).rstrip(b'=')
+
+
 def access(request):
     base_url = 'http://localhost:7000/o/authorize/'
-
-    # users = User.objects.filter(id=2)
-    # data = [{'username': user.username, 'email': user.email} for user in users]
-
-    # return JsonResponse({'data': data})
-
     params = {
-        'client_id': 'WCIMr0eQkDjqHbEjQ63gHzoQltDXl1ObM7iuVCPq',
-        'redirect_uri': 'http://localhost:8000/home',
+        'client_id': 'RO1tlvKqigM7OEAi4igEfn7rp6FrK3zDSfwPC70j',
+        'response_type': 'code',        
+        'redirect_uri': 'http://localhost:8000/home/',
         'scope': 'read',
-        'connection': 'connection',
-        'response_type': 'token',
-        
+        'code_challenge': code_challenge,
+        'code_challenge_method': 'S256'
     }
+    auth_url = base_url + '?' + urlencode(params)
+    print("*****************************")
+    print(auth_url)
 
-    url = base_url + '?' + urlencode(params)
-    # print(url)
-    # response = requests.get(url, params=params)
-    # data = response
-    # print(data)
-    # user_info = {
-    #     'username': request.user.username,
-    #     'email': request.user.email,
-
-    # }
-    # return render(request, 'access.html', {'url': url,'user_info': user_info})
-
-    return redirect(url)
+    # return render(request, 'access.html', {'url': url, 'user_info': user_data})
+    return redirect(auth_url)
 
 
 
